@@ -3,4 +3,5 @@ members = [
     "stack-heap",
     "base-concept",
     "html2md",
+    "httpie",
 ]
