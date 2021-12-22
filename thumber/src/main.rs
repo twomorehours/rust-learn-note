@@ -1,3 +1,11 @@
+// 总结
+// 1. axum从path取参数用Path<Params>, Params实现Deserialize
+// 2. axum可以增加layer并且传入handler使用
+// 3. async环境下不能使用std::sync::Mutex
+// 4. 定义接口声明能力 -> 实现接口提供能力   选择接口 -> 选择接口实现使用接口声明的能力
+// 5. 声明接口时，如果接口的能需要全局状态实现则使用&self, 如果接口的能力不需要全局状态则使用self
+
+
 use axum::{
     extract::{Extension, Path},
     http::{HeaderMap, HeaderValue, StatusCode},
