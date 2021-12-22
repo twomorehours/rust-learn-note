@@ -4,4 +4,5 @@ members = [
     "base-concept",
     "html2md",
     "httpie",
+    "thumber",
 ]
