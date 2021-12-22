@@ -4,9 +4,7 @@ use anyhow::Result;
 use bytes::Bytes;
 use image::{DynamicImage, ImageBuffer, ImageOutputFormat};
 use lazy_static::lazy_static;
-use photon_rs::{
-    effects, filters, multiple, native::open_image_from_bytes, transform, PhotonImage,
-};
+use photon_rs::{multiple, native::open_image_from_bytes, transform, PhotonImage};
 use std::convert::TryFrom;
 
 lazy_static! {
@@ -38,7 +36,7 @@ impl Engine for Photon {
             match spec.data {
                 Some(spec::Data::Resize(ref resize)) => {
                     self.0 = transform::resize(
-                        &mut self.0,
+                        &self.0,
                         resize.width,
                         resize.height,
                         transform::SamplingFilter::Nearest,

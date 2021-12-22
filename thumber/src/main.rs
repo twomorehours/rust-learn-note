@@ -115,12 +115,13 @@ async fn retrieve_image(url: &str, cache: Cache) -> anyhow::Result<Bytes> {
 // 需要抽出函数的时候
 // 如果一个操作是同步的 需要一个直接执行逻辑的fn
 // 如果一个操作时异步的 需要一个能返回异步任务（包含逻辑）的fn(async fn)
-fn print_test_url(url: &str) {
-    use std::borrow::Borrow;
-    let spec1 = Spec::new_resize(600, 800);
-    let spec2 = Spec::new_watermark(20, 20);
-    let image_spec = ImageSpec::new(vec![spec1, spec2]);
-    let s: String = image_spec.borrow().into();
-    let test_image = percent_encode(url.as_bytes(), NON_ALPHANUMERIC).to_string();
-    println!("test url: http://localhost:3000/image/{}/{}", s, test_image);
-}
+// #[warn(dead_code)]
+// fn print_test_url(url: &str) {
+//     use std::borrow::Borrow;
+//     let spec1 = Spec::new_resize(600, 800);
+//     let spec2 = Spec::new_watermark(20, 20);
+//     let image_spec = ImageSpec::new(vec![spec1, spec2]);
+//     let s: String = image_spec.borrow().into();
+//     let test_image = percent_encode(url.as_bytes(), NON_ALPHANUMERIC).to_string();
+//     println!("test url: http://localhost:3000/image/{}/{}", s, test_image);
+// }
