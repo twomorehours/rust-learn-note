@@ -5,4 +5,5 @@ members = [
     "html2md",
     "httpie",
     "thumber",
+    "queryer",
 ]
