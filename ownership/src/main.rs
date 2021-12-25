@@ -9,6 +9,12 @@ use std::{cell::RefCell, rc::Rc};
 // 5. Rust也支持一个值(heap)拥有多个owner（平等关系）(栈上的值， 可以在多个scope内， 也可以在一个scope内)。 通过引用计数管理。内存分配使用Box::leak()完成。
 // 6. 堆上的值被栈上的值own 栈上的值最终被scope own
 // 7. Rc/Arc own的值如果要想被改变就要具有内部可变性或者被具有内部可变性的结构包裹(通过只读引用拿到内部的可变引用)。 因为Rc/Arc只能去到只读的引用。
+// 8. 每个值都都有一个或者多个owner,可能是值或者scope, 当一个值的owner被drop（或者scope完成）的时候当前值也会被drop。
+// 9. 每个值的root owner都是都一定是scope， scope一定会结束，所以所有值都能被drop。Rust的自动内存回收就是scope结束引发的连锁反应。
+// 10. 因为ownership的关系，Rust的默认语义必须是move。因为如果值被复制到多个owner的话，可能会出现use after free的问题。如果需要使用多个owner，
+//     那么应该使用rc,而并不是简单的复制。rc能保证到0之后释放。
+// 11. 因为move在有些地方用起来很不方便（多次使用一个值）。所以又增加了copy和borrow。copy适用于简单类型和并不可变引用，因为copy损耗很小，并且并不own东西，不会出现use after free.
+//     borrow用于解决多次使用一个值的问题，并对ownership没有影响。 但是有使用限制，就是引用的生命周期必须小于值的生命周期。
 
 // 思考
 // 1. 堆上的值能引用栈上的值吗
@@ -30,6 +36,7 @@ use std::{cell::RefCell, rc::Rc};
 //     // consume previously stored last item
 //     println!("last: {:?}", last);
 // }
+
 
 #[derive(Debug)]
 struct Node<T> {
