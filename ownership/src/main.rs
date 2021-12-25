@@ -12,10 +12,10 @@ use std::{cell::RefCell, rc::Rc};
 // 8. 每个值都都有一个或者多个owner,可能是值或者scope, 当一个值的owner被drop（或者scope完成）的时候当前值也会被drop。
 // 9. 每个值的root owner都是都一定是scope， scope一定会结束，所以所有值都能被drop。Rust的自动内存回收就是scope结束引发的连锁反应。
 // 10. 因为ownership的关系，Rust的默认语义必须是move。因为如果值被复制到多个owner的话，可能会出现use after free的问题。如果需要使用多个owner，
-//     那么应该使用rc,而并不是简单的复制。rc能保证到0之后释放。
+//     那么应该使用rc,而并不是简单的复制。rc能保证到0之后释放。不不会出现use after free(最后才释放)，不会出现double free(只释放一次)。
 // 11. 因为move在有些地方用起来很不方便（多次使用一个值）。所以又增加了copy和borrow。copy适用于简单类型和并不可变引用，因为copy损耗很小，并且并不own东西，不会出现use after free.
-//     borrow用于解决多次使用一个值的问题，并对ownership没有影响。 但是有使用限制，就是引用的生命周期必须小于值的生命周期。
-
+//     borrow用于解决多次使用一个值的问题，并对ownership没有影响(不会释放 double free)。 但是有使用限制，就是引用的生命周期必须小于值的生命周期（不会出现use after free）。
+// 12. Rust的根本就是heap上的值被栈上额值own，最终被scope own. 当scope结束的时候free heap.
 // 思考
 // 1. 堆上的值能引用栈上的值吗
 // 可以。只要引用的声明周期不大于栈上值得声明周期。也就是堆上的值关联的栈上的值的生命周期小于等于被引用栈上的值的声明周期。
