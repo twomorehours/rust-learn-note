@@ -1,5 +1,3 @@
-use std::{cell::RefCell, rc::Rc};
-
 // 总结
 // 0. 给一个值赋值就是改变scope内值所在位置的内存。
 // 1. Rust使用ownership机制管理内存。 一个值被一个scope own， 一个值同某一时刻只能被一个scope own。 当变量所在的scope结束之后，值被drop。 值关联的heap也会被drop。
@@ -16,6 +14,9 @@ use std::{cell::RefCell, rc::Rc};
 // 11. 因为move在有些地方用起来很不方便（多次使用一个值）。所以又增加了copy和borrow。copy适用于简单类型和并不可变引用，因为copy损耗很小，并且并不own东西，不会出现use after free.
 //     borrow用于解决多次使用一个值的问题，并对ownership没有影响(不会释放 double free)。 但是有使用限制，就是引用的生命周期必须小于值的生命周期（不会出现use after free）。
 // 12. Rust的根本就是heap上的值被栈上额值own，最终被scope own. 当scope结束的时候free heap.
+// 13. 编译器需要根据引用的生命周期去判断是否是引用的生命周期必须大于值的声明周期。有些返回值编译器不能推断出声明周期的情况，需要手动标注。
+// 14. 手动标注就是告诉编译器返回值的声明周期和哪个参数额声明周期相同（取值位置）， 而不会改变任何的声明周期。
+
 // 思考
 // 1. 堆上的值能引用栈上的值吗
 // 可以。只要引用的声明周期不大于栈上值得声明周期。也就是堆上的值关联的栈上的值的生命周期小于等于被引用栈上的值的声明周期。
@@ -37,40 +38,60 @@ use std::{cell::RefCell, rc::Rc};
 //     println!("last: {:?}", last);
 // }
 
+// use std::{cell::RefCell, rc::Rc};
+// #[derive(Debug)]
+// struct Node<T> {
+//     val: T,
+//     next: Option<Rc<RefCell<Node<T>>>>,
+// }
 
-#[derive(Debug)]
-struct Node<T> {
-    val: T,
-    next: Option<Rc<RefCell<Node<T>>>>,
-}
+// impl<T> Node<T> {
+//     fn new(val: T) -> Self {
+//         Self { val, next: None }
+//     }
 
-impl<T> Node<T> {
-    fn new(val: T) -> Self {
-        Self { val, next: None }
-    }
+//     fn new_with_next(val: T, next: Rc<RefCell<Node<T>>>) -> Self {
+//         Self {
+//             val,
+//             next: Some(next),
+//         }
+//     }
 
-    fn new_with_next(val: T, next: Rc<RefCell<Node<T>>>) -> Self {
-        Self {
-            val,
-            next: Some(next),
+//     fn get_next(&self) -> Option<Rc<RefCell<Node<T>>>> {
+//         self.next.as_ref().map(|next| next.clone())
+//     }
+
+//     fn set_next(&mut self, next: Rc<RefCell<Node<T>>>) {
+//         self.next = Some(next)
+//     }
+// }
+
+// fn main() {
+//     let node1 = Node::new_with_next(1, Rc::new(RefCell::new(Node::new(2))));
+//     // option.as_ref Some(T) -> Some(&T)
+//     node1.get_next().as_ref().map(|next| {
+//         next.borrow_mut()
+//             .set_next(Rc::new(RefCell::new(Node::new(3))))
+//     });
+//     println!("{:?}", node1);
+// }
+
+fn stroke<'a>(s: &mut &'a str, delimeter: char) -> &'a str {
+    match s.find(delimeter) {
+        Some(idx) => {
+            let prefix = &s[..idx];
+            *s = &s[idx + 1..];
+            prefix
         }
-    }
-
-    fn get_next(&self) -> Option<Rc<RefCell<Node<T>>>> {
-        self.next.as_ref().map(|next| next.clone())
-    }
-
-    fn set_next(&mut self, next: Rc<RefCell<Node<T>>>) {
-        self.next = Some(next)
+        None => {
+            let prefix = &s[..];
+            *s = "";
+            prefix
+        }
     }
 }
 
 fn main() {
-    let node1 = Node::new_with_next(1, Rc::new(RefCell::new(Node::new(2))));
-    // option.as_ref Some(T) -> Some(&T)
-    node1.get_next().as_ref().map(|next| {
-        next.borrow_mut()
-            .set_next(Rc::new(RefCell::new(Node::new(3))))
-    });
-    println!("{:?}", node1);
+    let mut s = "abc";
+    println!("{}", stroke(&mut s, 'f'));
 }
