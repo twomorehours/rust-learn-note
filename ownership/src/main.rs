@@ -1,3 +1,5 @@
+use std::str::Chars;
+
 // 总结
 // 0. 给一个值赋值就是改变scope内值所在位置的内存。
 // 1. Rust使用ownership机制管理内存。 一个值被一个scope own， 一个值同某一时刻只能被一个scope own。 当变量所在的scope结束之后，值被drop。 值关联的heap也会被drop。
@@ -16,6 +18,7 @@
 // 12. Rust的根本就是heap上的值被栈上额值own，最终被scope own. 当scope结束的时候free heap.
 // 13. 编译器需要根据引用的生命周期去判断是否是引用的生命周期必须大于值的声明周期。有些返回值编译器不能推断出声明周期的情况，需要手动标注。
 // 14. 手动标注就是告诉编译器返回值的声明周期和哪个参数额声明周期相同（取值位置）， 而不会改变任何的声明周期。
+// 15. enum类型的值所占的空间等于最大子类型的值所占的空间+tag的空间。
 
 // 思考
 // 1. 堆上的值能引用栈上的值吗
@@ -76,20 +79,42 @@
 //     println!("{:?}", node1);
 // }
 
-fn stroke<'a>(s: &mut &'a str, delimeter: char) -> &'a str {
-    match s.find(delimeter) {
-        Some(idx) => {
-            let prefix = &s[..idx];
-            *s = &s[idx + 1..];
-            prefix
-        }
-        None => {
-            let prefix = &s[..];
-            *s = "";
-            prefix
-        }
-    }
-}
+// fn stroke<'a>(s: &mut &'a str, delimeter: char) -> &'a str {
+//     match s.find(delimeter) {
+//         Some(idx) => {
+//             let prefix = &s[..idx];
+//             *s = &s[idx + 1..];
+//             prefix
+//         }
+//         None => {
+//             let prefix = &s[..];
+//             *s = "";
+//             prefix
+//         }
+//     }
+// }
+
+// 1. 下面代码有什么问题
+// use std::str::Chars;
+
+// // 错误，为什么？
+// 引用大于name生命周期
+// fn lifetime1() -> &str {
+//     let name = "Tyr".to_string();
+//     &name[1..]
+// }
+
+// // 错误，为什么？
+// 引用大于name生命周期
+// fn lifetime2(name: String) -> &str {
+//     &name[1..]
+// }
+
+// // 正确，为什么？
+// Chars<'a>的生命周期等于name的生命周期 在name的取值scope内有效
+// fn lifetime3(name: &str) -> Chars {
+//     name.chars()
+// }
 
 fn main() {
     let mut s = "abc";
