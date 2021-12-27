@@ -2,6 +2,8 @@
 // // 1. 当定义一个trait时， 不确定的类型的处理方式。
 // //     当一个实现类实现trait时，这个类型的取值只有一个的情况下用关联类型。(一个类型只能实现一个trait一次 所以其内部关联类型也只能指定一次)
 // //     当一个实现类实现trait时，这个类型的取值可能有多个用泛型。（一个类型实现了多个trait）
+// 2. From/Into 从值到值 From在target实现 source自动实现Into
+// 3. AsRef/AsMut 从引用到引用 在source实现
 
 // // 问题
 // // 1. 对于 Add trait，如果我们不用泛型，把 Rhs 作为 Add trait 的关联类型，可以么？为什么？
@@ -41,6 +43,15 @@
 // //     println!("{:?}", mw);
 // // }
 
+// 1.Vec 可以实现 Copy trait 么？为什么？
+// 不能 因为Vec关联着堆上的内存 并实现了Drop 如果实现了Copy 可能会导致use after free | double free
+// 2. 在使用 Arc<Mutex<T>> 时，为什么下面这段代码可以直接使用 shared.lock()？
+// 因为Deref成了 &Mutex<T>
+// use std::sync::{Arc, Mutex};
+// let shared = Arc::new(Mutex::new(1));
+// let mut g = shared.lock().unwrap();
+// *g += 1;
+
 // use std::ops::Add;
 
 // #[derive(Debug, Copy, Clone)]
@@ -75,50 +86,56 @@
 //     println!("{:?}", c1 + c2);
 // }
 
-struct SentenceIter<'a> {
-    s: &'a mut &'a str,
-    delimiter: char,
-}
+// struct SentenceIter<'a> {
+//     s: &'a mut &'a str,
+//     delimiter: char,
+// }
 
-impl<'a> SentenceIter<'a> {
-    pub fn new(s: &'a mut &'a str, delimiter: char) -> Self {
-        Self { s, delimiter }
-    }
-}
+// impl<'a> SentenceIter<'a> {
+//     pub fn new(s: &'a mut &'a str, delimiter: char) -> Self {
+//         Self { s, delimiter }
+//     }
+// }
 
-impl<'a> Iterator for SentenceIter<'a> {
-    type Item = &'a str;
+// impl<'a> Iterator for SentenceIter<'a> {
+//     type Item = &'a str;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.s.len() == 0 {
-            return None;
-        }
-        match self.s.find(self.delimiter) {
-            Some(idx) => {
-                let next = &self.s[..idx + self.delimiter.len_utf8()];
-                *self.s = &self.s[idx + self.delimiter.len_utf8()..];
-                Some(next)
-            }
-            None => {
-                let next = &self.s[..];
-                *self.s = "";
-                Some(next)
-            }
-        }
-    }
-}
+//     fn next(&mut self) -> Option<Self::Item> {
+//         if self.s.len() == 0 {
+//             return None;
+//         }
+//         match self.s.find(self.delimiter) {
+//             Some(idx) => {
+//                 let next = &self.s[..idx + self.delimiter.len_utf8()];
+//                 *self.s = &self.s[idx + self.delimiter.len_utf8()..];
+//                 Some(next)
+//             }
+//             None => {
+//                 let next = &self.s[..];
+//                 *self.s = "";
+//                 Some(next)
+//             }
+//         }
+//     }
+// }
 
-#[test]
-fn it_works() {
-    let mut s = "This is the 1st sentence. This is the 2nd sentence.";
-    let mut iter = SentenceIter::new(&mut s, '.');
-    assert_eq!(iter.next(), Some("This is the 1st sentence."));
-    assert_eq!(iter.next(), Some(" This is the 2nd sentence."));
-    assert_eq!(iter.next(), None);
-}
+// #[test]
+// fn it_works() {
+//     let mut s = "This is the 1st sentence. This is the 2nd sentence.";
+//     let mut iter = SentenceIter::new(&mut s, '.');
+//     assert_eq!(iter.next(), Some("This is the 1st sentence."));
+//     assert_eq!(iter.next(), Some(" This is the 2nd sentence."));
+//     assert_eq!(iter.next(), None);
+// }
 
-fn main() {
-    let mut s = "a。 b。 c";
-    let sentences: Vec<_> = SentenceIter::new(&mut s, '。').collect();
-    println!("sentences: {:?}", sentences);
+// fn main() {
+//     let mut s = "a。 b。 c";
+//     let sentences: Vec<_> = SentenceIter::new(&mut s, '。').collect();
+//     println!("sentences: {:?}", sentences);
+// }
+
+
+
+fn main(){
+
 }
