@@ -116,7 +116,33 @@ use std::str::Chars;
 //     name.chars()
 // }
 
+
+
+
+use std::io::{BufWriter, Write};
+use std::net::TcpStream;
+
+#[derive(Debug)]
+struct MyWriter<W: Write> 
+{
+    writer: BufWriter<W>,
+}
+
+// impl考虑当前类型为具体类型
+impl MyWriter<TcpStream> {
+    pub fn new(addr: &str) -> Self {
+        let stream = TcpStream::connect("127.0.0.1:8080").unwrap();
+        Self {
+            writer: BufWriter::new(stream),
+        }
+    }
+
+    pub fn write(&mut self, buf: &str) -> std::io::Result<()> {
+        self.writer.write_all(buf.as_bytes())
+    }
+}
+
 fn main() {
-    let mut s = "abc";
-    println!("{}", stroke(&mut s, 'f'));
+    let mut writer = MyWriter::new("127.0.0.1:8080");
+    writer.write("hello world!");
 }
