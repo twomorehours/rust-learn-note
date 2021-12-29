@@ -8,4 +8,5 @@ members = [
     "queryer",
     "ownership",
     "tt",
+    "closure",
 ]
