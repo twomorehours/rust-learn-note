@@ -70,7 +70,7 @@ impl From<KvError> for CommandResponse {
         let mut resp = Self {
             status: StatusCode::OK.as_u16() as u32,
             message: err.to_string(),
-            .. CommandResponse::default()
+            ..CommandResponse::default()
         };
 
         match err {
@@ -92,7 +92,7 @@ impl From<Value> for CommandResponse {
         CommandResponse {
             values: vec![value],
             status: StatusCode::OK.as_u16() as u32,
-            .. CommandResponse::default()
+            ..CommandResponse::default()
         }
     }
 }
@@ -102,7 +102,7 @@ impl From<Vec<Kvpair>> for CommandResponse {
         CommandResponse {
             pairs,
             status: StatusCode::OK.as_u16() as u32,
-            .. CommandResponse::default()
+            ..CommandResponse::default()
         }
     }
 }
@@ -111,7 +111,7 @@ impl CommandResponse {
     pub fn ok() -> Self {
         CommandResponse {
             status: StatusCode::OK.as_u16() as u32,
-            .. CommandResponse::default()
+            ..CommandResponse::default()
         }
     }
 }

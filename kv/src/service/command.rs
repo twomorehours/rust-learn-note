@@ -1,4 +1,4 @@
-use crate::{CommandResponse, Hget, Hset, KvError, Storage, Hgetall, Value};
+use crate::{CommandResponse, Hget, Hgetall, Hset, KvError, Storage, Value};
 
 pub trait Command {
     fn execute(self, storage: &impl Storage) -> CommandResponse;
@@ -37,7 +37,7 @@ impl Command for Hgetall {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{command_request::RequestData, CommandRequest, Memtable, Value, Kvpair};
+    use crate::{command_request::RequestData, CommandRequest, Kvpair, Memtable, Value};
 
     #[test]
     fn hset_should_work() {

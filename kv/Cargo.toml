@@ -5,6 +5,14 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[examples]]
+name = "server"
+src = "server.rs"
+
+[[examples]]
+name = "client"
+src = "client.rs"
+
 [dependencies]
 bytes = "1" # 高效处理网络 buffer 的库
 prost = "0.9.0" # 处理 protobuf 的代码
@@ -12,6 +20,7 @@ tracing = "0.1" # 日志处理
 thiserror = "1.0.30"
 dashmap = "5.0.0" 
 http = "0.2.5"
+anyhow = "1" # 错误处理
 
 [dev-dependencies]
 anyhow = "1" # 错误处理
