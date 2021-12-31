@@ -1143,6 +1143,7 @@ dependencies = [
  "bytes",
  "dashmap",
  "futures",
+ "http",
  "prost",
  "prost-build",
  "thiserror",

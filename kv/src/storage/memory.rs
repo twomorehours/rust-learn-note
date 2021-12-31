@@ -17,6 +17,10 @@ impl Memtable {
             }
         }
     }
+
+    pub fn new() -> Memtable {
+        Memtable::default()
+    }
 }
 
 impl Storage for Memtable {
@@ -57,13 +61,8 @@ impl Storage for Memtable {
         &self,
         table: &str,
     ) -> Result<Box<dyn Iterator<Item = crate::Kvpair>>, crate::KvError> {
-        // let table = self.get_or_create_table(table);
-        // Ok(Box::new(
-        //     table
-        //         .iter()
-        //         .map(|v| Kvpair::new(v.key().clone(), v.value().clone())),
-        // ))
-
-        todo!()
+        let table = self.get_or_create_table(table).clone();
+        let iter = table.into_iter().map(|v| Kvpair::new(v.0, v.1));
+        Ok(Box::new(iter))
     }
 }
