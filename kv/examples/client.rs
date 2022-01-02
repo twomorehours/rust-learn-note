@@ -1,8 +1,8 @@
 use anyhow::Result;
-use async_prost::AsyncProstStream;
 use futures::{SinkExt, StreamExt};
 use kv::{CommandRequest, CommandResponse};
 use tokio::net::TcpStream;
+use tokio_util::codec::{Framed, LengthDelimitedCodec};
 use tracing::info;
 
 #[tokio::main]
@@ -11,32 +11,35 @@ async fn main() -> Result<()> {
 
     let stream = TcpStream::connect("localhost:9527").await?;
 
-    let mut stream: AsyncProstStream<_, CommandResponse, CommandRequest, _> =
-        AsyncProstStream::from(stream).for_async();
+    let mut stream = Framed::new(stream, LengthDelimitedCodec::new());
 
-    stream
-        .send(CommandRequest::new_hget("table1", "hello"))
-        .await?;
-    if let Some(Ok(resp)) = stream.next().await {
+    let req = CommandRequest::new_hget("table1", "hello");
+
+    stream.send(req.clone().into()).await?;
+    if let Some(Ok(data)) = stream.next().await {
+        let resp = CommandResponse::try_from(data)?;
         info!("recv resp {:?}", resp);
     }
 
     stream
-        .send(CommandRequest::new_hset("table1", "hello", "world".into()))
+        .send(CommandRequest::new_hset("table1", "hello", "world".into()).into())
         .await?;
-    if let Some(Ok(resp)) = stream.next().await {
+    if let Some(Ok(data)) = stream.next().await {
+        let resp = CommandResponse::try_from(data)?;
         info!("recv resp {:?}", resp);
     }
 
     stream
-        .send(CommandRequest::new_hget("table1", "hello"))
+        .send(CommandRequest::new_hget("table1", "hello").into())
         .await?;
-    if let Some(Ok(resp)) = stream.next().await {
+    if let Some(Ok(data)) = stream.next().await {
+        let resp = CommandResponse::try_from(data)?;
         info!("recv resp {:?}", resp);
     }
 
-    stream.send(CommandRequest::new_hgetall("table1")).await?;
-    if let Some(Ok(resp)) = stream.next().await {
+    stream.send(req.into()).await?;
+    if let Some(Ok(data)) = stream.next().await {
+        let resp = CommandResponse::try_from(data)?;
         info!("recv resp {:?}", resp);
     }
 

@@ -1,8 +1,10 @@
 mod abi;
 pub use abi::*;
-use http::StatusCode;
 
 use crate::KvError;
+use bytes::{Bytes, BytesMut};
+use http::StatusCode;
+use prost::Message;
 
 impl CommandRequest {
     pub fn new_hset(table: impl Into<String>, key: impl Into<String>, value: Value) -> Self {
@@ -29,6 +31,38 @@ impl CommandRequest {
                 table: table.into(),
             })),
         }
+    }
+}
+
+impl TryFrom<BytesMut> for CommandRequest {
+    type Error = KvError;
+
+    fn try_from(value: BytesMut) -> Result<Self, Self::Error> {
+        Ok(Self::decode(value)?)
+    }
+}
+
+impl From<CommandRequest> for Bytes {
+    fn from(value: CommandRequest) -> Self {
+        let mut buf = BytesMut::new();
+        value.encode(&mut buf).unwrap();
+        buf.into()
+    }
+}
+
+impl TryFrom<BytesMut> for CommandResponse {
+    type Error = KvError;
+
+    fn try_from(value: BytesMut) -> Result<Self, Self::Error> {
+        Ok(Self::decode(value)?)
+    }
+}
+
+impl From<CommandResponse> for Bytes {
+    fn from(value: CommandResponse) -> Self {
+        let mut buf = BytesMut::new();
+        value.encode(&mut buf).unwrap();
+        buf.into()
     }
 }
 
