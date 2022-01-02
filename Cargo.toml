@@ -10,4 +10,5 @@ members = [
     "tt",
     "closure",
     "kv",
+    "rgrep",
 ]

@@ -12,6 +12,26 @@ pub trait Storage {
     fn get_iter(&self, table: &str) -> Result<Box<dyn Iterator<Item = Kvpair>>, KvError>;
 }
 
+pub struct StorageIter<T>(T);
+
+impl<T> StorageIter<T> {
+    pub fn new(inner: T) -> Self {
+        Self(inner)
+    }
+}
+
+impl<T> Iterator for StorageIter<T>
+where
+    T: Iterator,
+    T::Item: Into<Kvpair>,
+{
+    type Item = Kvpair;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.next().map(|x| x.into())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

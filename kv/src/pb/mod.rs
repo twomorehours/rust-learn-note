@@ -65,6 +65,12 @@ impl From<i64> for Value {
     }
 }
 
+impl From<(String, Value)> for Kvpair {
+    fn from(p: (String, Value)) -> Self {
+        Kvpair::new(p.0, p.1)
+    }
+}
+
 impl From<KvError> for CommandResponse {
     fn from(err: KvError) -> Self {
         let mut resp = Self {
