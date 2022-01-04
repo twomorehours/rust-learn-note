@@ -392,6 +392,9 @@ dependencies = [
 [[package]]
 name = "concurrency"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
 
 [[package]]
 name = "console_error_panic_hook"
