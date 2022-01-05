@@ -1,9 +1,9 @@
 use anyhow::Result;
-use futures::{StreamExt};
+use futures::StreamExt;
 use kv::{CommandRequest, ProstClientStream};
 use tokio::net::TcpStream;
 
-use tracing::{info};
+use tracing::info;
 
 // #[tokio::main]
 // async fn main() -> Result<()> {

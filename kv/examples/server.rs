@@ -1,8 +1,6 @@
 use anyhow::Result;
-use futures::{StreamExt};
-use kv::{
-    Memtable, ProstServerStream,
-};
+use futures::StreamExt;
+use kv::{Memtable, ProstServerStream};
 use tokio::net::TcpListener;
 
 use tracing::{error, info};
