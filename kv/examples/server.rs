@@ -1,11 +1,10 @@
 use anyhow::Result;
-use futures::{SinkExt, StreamExt};
+use futures::{StreamExt};
 use kv::{
-    AsyncProstStream, CommandRequest, CommandResponse, Memtable, ProstServerStream, Service,
-    ServiceInner,
+    Memtable, ProstServerStream,
 };
 use tokio::net::TcpListener;
-use tokio_util::codec::{Framed, LengthDelimitedCodec};
+
 use tracing::{error, info};
 
 // #[tokio::main]

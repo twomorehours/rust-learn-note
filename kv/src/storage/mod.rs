@@ -59,7 +59,7 @@ mod tests {
         let v = store.set("t1", "hello".into(), "world".into());
         assert!(v.unwrap().is_none());
         // 再次 set 同样的 key 会更新，并返回之前的值
-        let v1 = store.set("t1", "hello".into(), "world1".into());
+        let _v1 = store.set("t1", "hello".into(), "world1".into());
         // assert_eq!(v1, Ok(Some("world".into())));
 
         // // get 存在的 key 会得到最新的值
