@@ -1,9 +1,9 @@
 use anyhow::Result;
 use futures::{SinkExt, StreamExt};
-use kv::{AsyncProstStream, CommandRequest, CommandResponse};
+use kv::{AsyncProstStream, CommandRequest, CommandResponse, ProstClientStream};
 use tokio::net::TcpStream;
 use tokio_util::codec::{Framed, LengthDelimitedCodec};
-use tracing::info;
+use tracing::{error, info};
 
 // #[tokio::main]
 // async fn main() -> Result<()> {
@@ -46,36 +46,69 @@ use tracing::info;
 //     Ok(())
 // }
 
+// #[tokio::main]
+// async fn main() -> Result<()> {
+//     tracing_subscriber::fmt::init();
+
+//     let stream = TcpStream::connect("localhost:9527").await?;
+
+//     let mut stream: AsyncProstStream<_, CommandResponse, CommandRequest> =
+//         AsyncProstStream::new(stream);
+
+//     let req = CommandRequest::new_hget("table1", "hello");
+
+//     stream.send(req.clone()).await?;
+//     if let Ok(resp) = stream.next().await {
+//         info!("recv resp {:?}", resp);
+//     }
+//     let hset = CommandRequest::new_hset("table1", "hello", "world".into());
+//     stream.send(hset).await?;
+//     if let Ok(resp) = stream.next().await {
+//         info!("recv resp {:?}", resp);
+//     }
+
+//     stream
+//         .send(CommandRequest::new_hget("table1", "hello"))
+//         .await?;
+//     if let Ok(resp) = stream.next().await {
+//         info!("recv resp {:?}", resp);
+//     }
+
+//     stream.send(req).await?;
+//     if let Ok(resp) = stream.next().await {
+//         info!("recv resp {:?}", resp);
+//     }
+
+//     Ok(())
+// }
+
 #[tokio::main]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
     let stream = TcpStream::connect("localhost:9527").await?;
 
-    let mut stream: AsyncProstStream<_, CommandResponse, CommandRequest> =
-        AsyncProstStream::new(stream);
+    let mut stream = ProstClientStream::new(stream);
 
     let req = CommandRequest::new_hget("table1", "hello");
 
-    stream.send(req.clone()).await?;
-    if let Ok(resp) = stream.next().await {
+    if let Ok(resp) = stream.execute(req.clone()).await {
         info!("recv resp {:?}", resp);
     }
+
     let hset = CommandRequest::new_hset("table1", "hello", "world".into());
-    stream.send(hset).await?;
-    if let Ok(resp) = stream.next().await {
+    if let Ok(resp) = stream.execute(hset).await {
         info!("recv resp {:?}", resp);
     }
 
-    stream
-        .send(CommandRequest::new_hget("table1", "hello"))
-        .await?;
-    if let Ok(resp) = stream.next().await {
+    if let Ok(resp) = stream
+        .execute(CommandRequest::new_hget("table1", "hello"))
+        .await
+    {
         info!("recv resp {:?}", resp);
     }
 
-    stream.send(req).await?;
-    if let Ok(resp) = stream.next().await {
+    if let Ok(resp) = stream.execute(req).await {
         info!("recv resp {:?}", resp);
     }
 
