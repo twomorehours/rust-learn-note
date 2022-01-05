@@ -32,6 +32,15 @@ impl CommandRequest {
             })),
         }
     }
+
+    pub fn new_hdel(table: impl Into<String>, key: impl Into<String>) -> Self {
+        Self {
+            request_data: Some(command_request::RequestData::Hdel(Hdel {
+                table: table.into(),
+                key: key.into(),
+            })),
+        }
+    }
 }
 
 impl TryFrom<BytesMut> for CommandRequest {
@@ -91,6 +100,20 @@ impl From<&str> for Value {
     }
 }
 
+impl From<Bytes> for Value {
+    fn from(values: Bytes) -> Self {
+        Self {
+            value: Some(value::Value::Binary(values)),
+        }
+    }
+}
+
+impl<const N: usize> From<&[u8; N]> for Value {
+    fn from(values: &[u8; N]) -> Self {
+        Bytes::copy_from_slice(values).into()
+    }
+}
+
 impl From<i64> for Value {
     fn from(value: i64) -> Self {
         Self {
@@ -131,6 +154,16 @@ impl From<Value> for CommandResponse {
     fn from(value: Value) -> Self {
         CommandResponse {
             values: vec![value],
+            status: StatusCode::OK.as_u16() as u32,
+            ..CommandResponse::default()
+        }
+    }
+}
+
+impl From<Vec<Value>> for CommandResponse {
+    fn from(values: Vec<Value>) -> Self {
+        CommandResponse {
+            values,
             status: StatusCode::OK.as_u16() as u32,
             ..CommandResponse::default()
         }

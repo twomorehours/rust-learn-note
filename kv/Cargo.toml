@@ -24,6 +24,7 @@ anyhow = "1" # 错误处理
 futures = "0.3"
 tokio = { version = "1", features = ["full"] }
 tokio-util = { version = "0.6", features = ["codec"] }
+flate2 = "1"
 
 
 [dev-dependencies]

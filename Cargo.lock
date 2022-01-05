@@ -1155,6 +1155,7 @@ dependencies = [
  "async-prost",
  "bytes",
  "dashmap",
+ "flate2",
  "futures",
  "http",
  "prost",
