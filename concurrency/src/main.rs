@@ -145,6 +145,8 @@ mod unbound;
 
 mod hash;
 
+mod chain;
+
 #[tokio::main]
 async fn main() {
     hash::start().await.unwrap();
