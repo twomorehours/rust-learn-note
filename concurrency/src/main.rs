@@ -143,4 +143,9 @@ use std::{
 mod bound;
 mod unbound;
 
-fn main() {}
+mod hash;
+
+#[tokio::main]
+async fn main() {
+    hash::start().await.unwrap();
+}

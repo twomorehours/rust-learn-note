@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1"
+tokio = { version = "1", features = ["full"] } # 异步处理库
+tokio-util = { version = "0.6", features = ["codec"] }
+futures = "0.3"
