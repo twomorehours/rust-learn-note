@@ -1,3 +1,7 @@
+// 总结
+// 遍历 -> for -> 想好对个元素的处理逻辑
+// 其他重复执行(指定次数) -> while / loop / for -> 想好条件和单词执行逻辑
+
 use anyhow::{anyhow, Result};
 use std::{
     collections::VecDeque,
