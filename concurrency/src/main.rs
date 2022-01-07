@@ -35,6 +35,8 @@ use std::{
 //    - 虽然真正调用的不是async函数本身而是其返回的futrue 但是future的还是写在async里面的 所以查问题是去async里面查
 //    - 整个项目是由大量的这种流程组成的 到最后免疫完成后变成普通调用了
 
+// 8. async fn创建一个能返回Future的函数 获取到Future根据同步异步决定如何调用
+
 // use std::{
 //     cell::{Cell, RefCell},
 //     sync::{
