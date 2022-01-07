@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package net;
+
+
+
+message GetNetRequest {
+    string url = 1;
+}
+
+message GetNetResponse {
+    string text = 1;
+}
+
+service Net {
+    rpc Get (GetNetRequest) returns (GetNetResponse);
+}

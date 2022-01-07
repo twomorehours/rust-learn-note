@@ -37,6 +37,8 @@ use std::{
 
 // 8. async fn创建一个能返回Future的函数 获取到Future根据同步异步决定如何调用
 
+// 9. 同步函数是函数调函数 async是调用函数得到future之后再调用future
+
 // use std::{
 //     cell::{Cell, RefCell},
 //     sync::{

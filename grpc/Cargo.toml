@@ -1,0 +1,34 @@
+[package]
+name = "grpc"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[examples]] # Bin to run the HelloWorld gRPC server
+name = "helloworld-server"
+path = "examples/hello_server.rs"
+
+[[examples]] # Bin to run the HelloWorld gRPC client
+name = "helloworld-client"
+path = "src/hello_client.rs"
+
+[[examples]] # Bin to run the HelloWorld gRPC server
+name = "net-server"
+path = "examples/net_server.rs"
+
+
+[[examples]] # Bin to run the HelloWorld gRPC server
+name = "net-client"
+path = "examples/net_client.rs"
+
+
+[dependencies]
+tonic = "0.6"
+prost = "0.9"
+tokio = { version = "1.15.0", features = ["full"] }
+anyhow = "1"
+reqwest = { version = "0.11", features = ["json"] } # HTTP 客户端
+
+[build-dependencies]
+tonic-build = "0.6"

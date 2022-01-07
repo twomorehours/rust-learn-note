@@ -13,4 +13,5 @@ members = [
     "rgrep",
     "unsf",
     "concurrency",
+    "grpc",
 ]
