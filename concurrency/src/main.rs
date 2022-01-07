@@ -21,7 +21,7 @@ use std::{
 
 // 5. 自己写应该注意什么
 //     - 会调用.await的函数用async
-//     - .await会提交一个task 这个task是一个状态机 当执行到最终状态的时候返回
+//     - .await会在当前task call一个future 这个future是一个状态机 当执行到最终状态的时候返回
 
 // use std::{
 //     cell::{Cell, RefCell},
