@@ -17,7 +17,8 @@ use std::{
 // 4. 如何调用Future
 //   - 调用async函数获得Future .await
 //   - 调用AsyncXXXExt trait 提供的返回Future的函数 .await
-//   - 只有spawn才会创建task .await不会创建task 只是在当前task内调用future 
+//   - 只有spawn才会创建task .await不会创建task 只是在当前task内调用future
+//   - #[tokio::main]最开始就在一个task中执行
 
 // 5. 自己写应该注意什么
 //     - 会调用.await的函数用async
