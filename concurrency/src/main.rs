@@ -8,8 +8,18 @@ use std::{
 // 1. 想要用不可变引用取到可变引用就用内部可变指针。主要是值在被共享的时候。
 // 2. Mutex的区别
 //                    其他                         Rust
-// 作用（场景）       保护逻辑                    返回共享值的可变引用并保护值
+// 作用（场景）       互斥处理共享数据逻辑                   返回共享值的可变引用并保护值
 // 实现    调用Mutex 满足通过 不满足阻塞           调用Mutex 满足返回引用 不满足阻塞
+
+// 3. 如何实现Future
+//   - 写async fn/block 会编译成 fn -> impl Future<Output = T>
+//   - impl AsyncXXX trait 这种trait都有默认的实现Future 但是需要回调实现的poll
+// 4. 如何调用Future
+//   - 调用async函数获得Future .await
+//   - 调用AsyncXXXExt trait 提供的返回Future的函数 .await
+// 5. 自己写应该注意什么
+//     - 会调用.await的函数用async
+//     - .await会提交一个task 这个task是一个状态机 当执行到最终状态的时候返回
 
 // use std::{
 //     cell::{Cell, RefCell},
