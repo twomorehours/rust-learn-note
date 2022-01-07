@@ -24,6 +24,17 @@ use std::{
 //     - 会调用.await的函数用async
 //     - .await会在当前task call一个future 这个future是一个状态机 当执行到最终状态的时候返回
 
+// 6. aysnc await是什么
+//    - async用于定义返回Future的函数 Fn() -> Future
+//    - await用用于调用Future match f.poll() {Ready|Pending}
+//    - 编译之后async和await都不存在了
+
+// 7. 一次流程
+//    - async或impl AsyncXXX得到一个能返回Future的函数
+//    - 根据是否同步执行选择使用.await或者spawn
+//    - 虽然真正调用的不是async函数本身而是其返回的futrue 但是future的还是写在async里面的 所以查问题是去async里面查
+//    - 整个项目是由大量的这种流程组成的 到最后免疫完成后变成普通调用了
+
 // use std::{
 //     cell::{Cell, RefCell},
 //     sync::{
