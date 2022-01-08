@@ -5,7 +5,7 @@
 // // 2. From/Into 从值到值 From在target实现 source自动实现Into
 // // 3. AsRef/AsMut 从引用到引用 在source实现
 // // 4. enum的tag占用1byte tag + padding + val 需要和8bytes对其 0 <= padding <= 7
-// // 5. 给一个enum实现thiserror 然后在每个可能返回错误的地方都使用这个enum类型接收  
+// // 5. 给一个enum实现thiserror 然后在每个可能返回错误的地方都使用这个enum类型接收
 // //    可以返回自定义的错误 也可以返回对其他错误的包装(#[from]error) 因为enum内部每个类型的值都可以作为enum类型的值
 // // 6. 逐层考虑 每层的值如何组织 多对一       每层的值如何解析 一对多
 
@@ -357,7 +357,4 @@
 //     println!("s1: {:?}", s1);
 // }
 
-
-fn main(){
-
-}
+fn main() {}

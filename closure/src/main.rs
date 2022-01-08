@@ -74,7 +74,4 @@
 //     exec.execute(cmd)
 // }
 
-
-fn main(){    
-}
-
+fn main() {}

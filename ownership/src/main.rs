@@ -116,15 +116,11 @@ use std::str::Chars;
 //     name.chars()
 // }
 
-
-
-
 use std::io::{BufWriter, Write};
 use std::net::TcpStream;
 
 #[derive(Debug)]
-struct MyWriter<W: Write> 
-{
+struct MyWriter<W: Write> {
     writer: BufWriter<W>,
 }
 

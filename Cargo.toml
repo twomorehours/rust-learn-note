@@ -14,4 +14,6 @@ members = [
     "unsf",
     "concurrency",
     "grpc",
+    "proto",
+    "grpc2",
 ]

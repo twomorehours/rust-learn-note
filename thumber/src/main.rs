@@ -5,7 +5,6 @@
 // 4. 定义接口声明能力 -> 实现接口提供能力   选择接口 -> 选择接口实现使用接口声明的能力
 // 5. 声明接口时，如果接口的能需要全局状态实现则使用&self, 如果接口的能力不需要全局状态则使用self
 
-
 use axum::{
     extract::{Extension, Path},
     http::{HeaderMap, HeaderValue, StatusCode},
