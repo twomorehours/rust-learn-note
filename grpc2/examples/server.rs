@@ -110,7 +110,7 @@ impl RouteGuide for RouteGuideService {
             }
         };
 
-        Ok(Response::new(Box::pin(output) as Self::RouteChatStream))
+        Ok(Response::new(Box::pin(output)))
     }
 }
 
