@@ -104,4 +104,10 @@ impl CalculatableShape for Shape {
     }
 }
 
-fn main() {}
+fn main() {
+    let value = Ok::<_,&str>(Some(1));
+    match value {
+        Ok(Some(1)) => println!("Some(1)"), 
+        _ => println!("Other"),
+    }
+}
