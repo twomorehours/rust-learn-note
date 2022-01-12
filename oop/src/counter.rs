@@ -1,5 +1,7 @@
 use std::{
     collections::HashMap,
+    ops::Range,
+    slice::SliceIndex,
     sync::{Arc, Mutex},
     thread,
     time::{Duration, SystemTime},
@@ -8,7 +10,7 @@ use std::{
 use anyhow::Result;
 use rand::Rng;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 struct Metric {
     api: String,
     ts: i64,
@@ -48,37 +50,24 @@ impl<Store: MetricStorage> MetricsCollector for DefaultMetricCollector<Store> {
 
 trait MetricStorage {
     fn save(&mut self, metric: Metric) -> Result<()>;
-    fn load(&self, api: String, start: i64, end: i64) -> Result<Option<Vec<Metric>>>;
     fn load_all(&self, start: i64, end: i64) -> Result<Vec<(String, Vec<Metric>)>>;
 }
 
 #[derive(Default, Debug)]
 struct MemoryMetricStorage {
-    metrcis: HashMap<String, Vec<Metric>>,
+    metrics: HashMap<String, Vec<Metric>>,
 }
 
 impl MetricStorage for MemoryMetricStorage {
     fn save(&mut self, metric: Metric) -> Result<()> {
-        let entry = self.metrcis.entry(metric.api.clone()).or_insert(vec![]);
+        let entry = self.metrics.entry(metric.api.clone()).or_insert(vec![]);
         entry.push(metric);
         Ok(())
     }
 
-    fn load(&self, api: String, start: i64, end: i64) -> Result<Option<Vec<Metric>>> {
-        let api_metrics = self.metrcis.get(&api).map(|metrics| {
-            metrics
-                .clone()
-                .into_iter()
-                .filter(|m| m.ts >= start && m.ts <= end)
-                .collect()
-        });
-
-        Ok(api_metrics)
-    }
-
     fn load_all(&self, start: i64, end: i64) -> Result<Vec<(String, Vec<Metric>)>> {
         let metrics = self
-            .metrcis
+            .metrics
             .iter()
             .map(|(k, v)| {
                 (
@@ -170,5 +159,25 @@ pub fn main() {
             ))
             .unwrap();
         thread::sleep(Duration::from_secs(1));
+    }
+}
+
+fn gen_iter<T: Default>(r: Range<i32>) -> Box<dyn Iterator<Item = T>> {
+    Box::new(r.into_iter().map(|_| T::default()))
+}
+
+fn to_iter(vec: Option<Vec<i32>>) -> Option<Box<dyn Iterator<Item = i32>>> {
+    match vec {
+        Some(v) => Some(Box::new(v.into_iter())),
+        None => None,
+    }
+}
+
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gen_iter_works() {
+        assert_eq!(gen_iter::<i32>(1..3).collect::<Vec<_>>(), vec![0, 0]);
     }
 }
