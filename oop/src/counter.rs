@@ -6,6 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
+use rand::Rng;
 
 #[derive(Debug, Clone)]
 struct Metric {
@@ -156,9 +157,18 @@ pub fn main() {
         thread::sleep(Duration::from_secs(1));
     });
 
+    let mut rng = rand::thread_rng();
     loop {
-        let ts = SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap();
-        collector.collect(Metric::new("api_a", ts.as_millis() as i64, 10)).unwrap();
+        let ts = SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap();
+        collector
+            .collect(Metric::new(
+                "api_a",
+                ts.as_millis() as i64,
+                rng.gen_range(0..100),
+            ))
+            .unwrap();
         thread::sleep(Duration::from_secs(1));
     }
 }
