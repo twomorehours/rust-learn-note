@@ -2055,6 +2055,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "prost_demo"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "prost",
+ "prost-build",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "proto"
 version = "0.1.0"
 dependencies = [

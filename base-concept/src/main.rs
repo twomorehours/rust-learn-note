@@ -105,9 +105,9 @@ impl CalculatableShape for Shape {
 }
 
 fn main() {
-    let value = Ok::<_,&str>(Some(1));
+    let value = Ok::<_, &str>(Some(1));
     match value {
-        Ok(Some(1)) => println!("Some(1)"), 
+        Ok(Some(1)) => println!("Some(1)"),
         _ => println!("Other"),
     }
 }

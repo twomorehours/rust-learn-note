@@ -17,4 +17,5 @@ members = [
     "proto",
     "grpc2",
     "oop",
+    "prost_demo",
 ]
