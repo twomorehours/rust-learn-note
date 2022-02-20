@@ -18,4 +18,5 @@ members = [
     "grpc2",
     "oop",
     "prost_demo",
+    "lock",
 ]

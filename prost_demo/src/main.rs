@@ -21,19 +21,24 @@ mod pb;
 use pb::*;
 
 fn main() {
+    // let shirt = Shirt::new("red", shirt::Size::Medium);
+    // let mut buf = BytesMut::with_capacity(shirt.encoded_len());
+    // let mut buf_with_de = BytesMut::with_capacity(shirt.encoded_len() + 4);
+    // shirt.encode(&mut buf).unwrap();
+    // buf_with_de.put_u32(shirt.encoded_len() as u32);
+    // shirt.encode(&mut buf_with_de).unwrap();
+
+    // eprintln!("encode_len: {:?}, de_len: {:?}", buf.len(), buf_with_de.get_u32());
+
+    // let json = serde_json::to_string_pretty(&shirt).unwrap();
+    // eprintln!("{:#?}", json);
+
+    // let shirt1: Shirt = serde_json::from_str(&json).unwrap();
+    // eprintln!("{:#?}", shirt1);
+
+
     let shirt = Shirt::new("red", shirt::Size::Medium);
-    let mut buf = BytesMut::with_capacity(shirt.encoded_len());
-    let mut buf_with_de = BytesMut::with_capacity(shirt.encoded_len() + 4);
-    shirt.encode(&mut buf).unwrap();
-    buf_with_de.put_u32(shirt.encoded_len() as u32);
-    shirt.encode(&mut buf_with_de).unwrap();
+    println!("pb: {}, json: {}", shirt.encoded_len(), serde_json::to_string_pretty(&shirt).unwrap().as_bytes().len());
 
-    eprintln!("encode_len: {:?}, de_len: {:?}", buf.len(), buf_with_de.get_u32());
-
-    let json = serde_json::to_string_pretty(&shirt).unwrap();
-    eprintln!("{:#?}", json);
-
-    let shirt1: Shirt = serde_json::from_str(&json).unwrap();
-    eprintln!("{:#?}", shirt1);
 
 }
