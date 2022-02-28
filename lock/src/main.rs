@@ -13,11 +13,11 @@ struct Store1 {
 
 impl Store1 {
     fn save1(&mut self, val: i32) {
-        self.set1.insert(val);
+        // self.set1.insert(val);
     }
 
     fn save2(&mut self, val: i32) {
-        self.set2.insert(val);
+        // self.set2.insert(val);
     }
 }
 
@@ -30,18 +30,18 @@ struct Store2 {
 impl Store2 {
     fn save1(&self, val: i32) {
         let mut set1 = self.set1.lock().unwrap();
-        set1.insert(val);
+        // set1.insert(val);
     }
 
     fn save2(&self, val: i32) {
         let mut set2 = self.set2.lock().unwrap();
-        set2.insert(val);
+        // set2.insert(val);
     }
 }
 
 fn main() {
     t1();
-    // t2();
+    t2();
 }
 
 fn t1() {
@@ -53,7 +53,7 @@ fn t1() {
     for _ in 0..10 {
         let store_c = store1.clone();
         let handle = thread::spawn(move || {
-            for j in 0..1000000 {
+            for j in 0..10000000 {
                 let mut g = store_c.lock().unwrap();
                 if j % 2 == 0 {
                     g.save1(j);
@@ -80,7 +80,7 @@ fn t2() {
     for _ in 0..10 {
         let store_c = store2.clone();
         let handle = thread::spawn(move || {
-            for j in 0..1000000 {
+            for j in 0..10000000 {
                 if j % 2 == 0 {
                     store_c.save1(j);
                 } else {

@@ -19,4 +19,5 @@ members = [
     "oop",
     "prost_demo",
     "lock",
+    "flags",
 ]
