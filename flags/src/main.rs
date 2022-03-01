@@ -33,13 +33,17 @@ fn main() {
     // split就是产生一个新的view 从ptr是0 cap到len,len为最后  ptr是len cap是cap-len len为0
     // 是用于写一段切下去的场景
 
+    // split_off和split_to是相反的 split_off是保留前面一段 split_to是保留后面一段
+    // 前面一段len=min(len,max) 后面一段len=if(len>at){len-at}else{0}
+
     use bytes::{BufMut, BytesMut};
 
     let mut buf = BytesMut::with_capacity(1024);
-    buf.put(&b"hello world"[..]);
-    buf.put_u16(1234);
 
-    let a = buf.split();
+    buf.put(&b"hello"[..]);
+
+    let a = buf.split_off(10);
+
     eprintln!(
         "{} {} {} {}",
         a.len(),
@@ -47,12 +51,25 @@ fn main() {
         buf.len(),
         buf.capacity()
     );
-    assert_eq!(a, b"hello world\x04\xD2"[..]);
 
-    buf.put(&b"goodbye world"[..]);
+    // buf.put_u16(1234);
 
-    let b = buf.split();
-    assert_eq!(b, b"goodbye world"[..]);
+    // let a = buf.split();
+    // eprintln!(
+    //     "{} {} {} {}",
+    //     a.len(),
+    //     a.capacity(),
+    //     buf.len(),
+    //     buf.capacity()
+    // );
+    // assert_eq!(a, b"hello world\x04\xD2"[..]);
 
-    assert_eq!(buf.capacity(), 998);
+    // buf.put(&b"goodbye world"[..]);
+
+    // let b = buf.split();
+    // assert_eq!(b, b"goodbye world"[..]);
+
+    // assert_eq!(buf.capacity(), 998);
+
+    // println!("{}", i32::MAX + 1);
 }
