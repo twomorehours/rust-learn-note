@@ -36,21 +36,21 @@ fn main() {
     // split_off和split_to是相反的 split_off是保留前面一段 split_to是保留后面一段
     // 前面一段len=min(len,max) 后面一段len=if(len>at){len-at}else{0}
 
-    use bytes::{BufMut, BytesMut};
+    // use bytes::{BufMut, BytesMut};
 
-    let mut buf = BytesMut::with_capacity(1024);
+    // let mut buf = BytesMut::with_capacity(1024);
 
-    buf.put(&b"hello"[..]);
+    // buf.put(&b"hello"[..]);
 
-    let a = buf.split_off(10);
+    // let a = buf.split_off(10);
 
-    eprintln!(
-        "{} {} {} {}",
-        a.len(),
-        a.capacity(),
-        buf.len(),
-        buf.capacity()
-    );
+    // eprintln!(
+    //     "{} {} {} {}",
+    //     a.len(),
+    //     a.capacity(),
+    //     buf.len(),
+    //     buf.capacity()
+    // );
 
     // buf.put_u16(1234);
 
@@ -72,4 +72,19 @@ fn main() {
     // assert_eq!(buf.capacity(), 998);
 
     // println!("{}", i32::MAX + 1);
+
+    #[derive(Debug)]
+    struct P(Option<Vec<i32>>);
+
+    let mut value = P(Some(vec![1, 2, 3]));
+    // 不是.就move出来了 需要接收才会move出来
+    // 用值.调用引用函数也不会move
+    // Some(ref) Ok(ref) 里面是取到的是对原值的引用
+    if let Some(ref mut v) = value.0 {
+        for t in v {
+            *t += 1;
+        }
+    }
+
+    eprintln!("{:?}", value);
 }
